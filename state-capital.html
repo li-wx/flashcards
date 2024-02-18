@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>State/Capital Flashcards</title>
+    <style>
+        .card {
+            width: 305px;
+            height: 200px;
+            position: relative;
+            perspective: 600px;
+            cursor: pointer;
+        }
+        .card-content {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 1s;
+        }
+        .card.flipped .card-content {
+            transform: rotateY(180deg);
+        }
+        .card-face {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            backface-visibility: hidden;
+            border: 1px solid #ccc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+        .card-face.back {
+            transform: rotateY(180deg);
+        }
+        button {
+            font-size: 20px; /* Adjust as needed */
+            padding: 10px 20px; /* Adjust as needed */
+        }
+    </style>
+</head>
+<body>
+
+    <h1>State/Capital Flashcards</h1>
+    
+    <p>Instructions: 
+        <br>1. Click on the card to flip it.
+        <br>2. Click on "I got it right" makes the card appear less often.
+        <br>3. Click on "I got it wrong" makes the card appear more often.
+        </p>
+
+    <div class="card" id="card">
+        <div class="card-content">
+            <div class="card-face front" id="front"></div>
+            <div class="card-face back" id="back"></div>
+        </div>
+    </div>
+    <button id="right">I got it right</button>
+    <button id="wrong">I got it wrong</button>
+
+    <script>
+
+        const states = {
+            'Alabama': { capital: 'Montgomery', weight: 1 },
+            'Alaska': { capital: 'Juneau', weight: 1 },
+            'Arizona': { capital: 'Phoenix', weight: 1 },
+            'Arkansas': { capital: 'Little Rock', weight: 1 },
+            'California': { capital: 'Sacramento', weight: 1 },
+            'Colorado': { capital: 'Denver', weight: 1 },
+            'Connecticut': { capital: 'Hartford', weight: 1 },
+            'Delaware': { capital: 'Dover', weight: 1 },
+            'Florida': { capital: 'Tallahassee', weight: 1 },
+            'Georgia': { capital: 'Atlanta', weight: 1 },
+            'Hawaii': { capital: 'Honolulu', weight: 1 },
+            'Idaho': { capital: 'Boise', weight: 1 },
+            'Illinois': { capital: 'Springfield', weight: 1 },
+            'Indiana': { capital: 'Indianapolis', weight: 1 },
+            'Iowa': { capital: 'Des Moines', weight: 1 },
+            'Kansas': { capital: 'Topeka', weight: 1 },
+            'Kentucky': { capital: 'Frankfort', weight: 1 },
+            'Louisiana': { capital: 'Baton Rouge', weight: 1 },
+            'Maine': { capital: 'Augusta', weight: 1 },
+            'Maryland': { capital: 'Annapolis', weight: 1 },
+            'Massachusetts': { capital: 'Boston', weight: 1 },
+            'Michigan': { capital: 'Lansing', weight: 1 },
+            'Minnesota': { capital: 'Saint Paul', weight: 1 },
+            'Mississippi': { capital: 'Jackson', weight: 1 },
+            'Missouri': { capital: 'Jefferson City', weight: 1 },
+            'Montana': { capital: 'Helena', weight: 1 },
+            'Nebraska': { capital: 'Lincoln', weight: 1 },
+            'Nevada': { capital: 'Carson City', weight: 1 },
+            'New Hampshire': { capital: 'Concord', weight: 1 },
+            'New Jersey': { capital: 'Trenton', weight: 1 },
+            'New Mexico': { capital: 'Santa Fe', weight: 1 },
+            'New York': { capital: 'Albany', weight: 1 },
+            'North Carolina': { capital: 'Raleigh', weight: 1 },
+            'North Dakota': { capital: 'Bismarck', weight: 1 },
+            'Ohio': { capital: 'Columbus', weight: 1 },
+            'Oklahoma': { capital: 'Oklahoma City', weight: 1 },
+            'Oregon': { capital: 'Salem', weight: 1 },
+            'Pennsylvania': { capital: 'Harrisburg', weight: 1 },
+            'Rhode Island': { capital: 'Providence', weight: 1 },
+            'South Carolina': { capital: 'Columbia', weight: 1 },
+            'South Dakota': { capital: 'Pierre', weight: 1 },
+            'Tennessee': { capital: 'Nashville', weight: 1 },
+            'Texas': { capital: 'Austin', weight: 1 },
+            'Utah': { capital: 'Salt Lake City', weight: 1 },
+            'Vermont': { capital: 'Montpelier', weight: 1 },
+            'Virginia': { capital: 'Richmond', weight: 1 },
+            'Washington': { capital: 'Olympia', weight: 1 },
+            'West Virginia': { capital: 'Charleston', weight: 1 },
+            'Wisconsin': { capital: 'Madison', weight: 1 },
+            'Wyoming': { capital: 'Cheyenne', weight: 1 }
+        };
+
+
+
+        const card = document.getElementById('card');
+        const front = document.getElementById('front');
+        const back = document.getElementById('back');
+
+        function weightedRandomState() {
+            const weights = Object.values(states).map(state => state.weight);
+            const totalWeight = weights.reduce((a, b) => a + b, 0);
+            let random = Math.random() * totalWeight;
+            for (let stateName in states) {
+                if (random < states[stateName].weight) {
+                    return stateName;
+                }
+                random -= states[stateName].weight;
+            }
+        }
+
+        function newRound() {
+            const randomState = weightedRandomState();
+            front.textContent = randomState;
+            back.textContent = states[randomState].capital;
+        }
+
+        card.addEventListener('click', () => {
+            card.classList.toggle('flipped');
+        });
+
+        document.getElementById('right').addEventListener('click', () => {
+            states[front.textContent].weight /= 2;
+            newRound();
+        });
+
+        document.getElementById('wrong').addEventListener('click', () => {
+            states[front.textContent].weight *= 2;
+            newRound();
+        });
+
+        newRound();
+    </script>
+</body>
+</html>
