@@ -132,10 +132,23 @@
             }
         }
 
+        function normalizeWeights() {
+            // Calculate the current total weight
+            const totalWeight = Object.values(states).map(state => state.weight).reduce((a, b) => a + b, 0);
+
+            // Adjust each weight
+            for (let stateName in states) {
+                states[stateName].weight = states[stateName].weight / totalWeight * 50;
+            }
+        }
+        
         function newRound() {
             const randomState = weightedRandomState();
             front.textContent = randomState;
             back.textContent = states[randomState].capital;
+
+            // Normalize the weights after each round
+            normalizeWeights();
         }
 
         card.addEventListener('click', () => {
@@ -148,7 +161,10 @@
         });
 
         document.getElementById('wrong').addEventListener('click', () => {
-            states[front.textContent].weight *= 2;
+            // if the weight is smaller than 10, double it
+            if (states[front.textContent].weight < 10) {
+                states[front.textContent].weight *= 2;
+            }
             newRound();
         });
 
